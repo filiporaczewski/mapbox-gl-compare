@@ -95,15 +95,34 @@ Compare.prototype = {
       : 'translate(' + x + 'px, 0)';
     this._controlContainer.style.transform = pos;
     this._controlContainer.style.WebkitTransform = pos;
-    var clipA = this._horizontal
-      ? 'rect(0, 999em, ' + x + 'px, 0)'
-      : 'rect(0, ' + x + 'px, ' + this._bounds.height + 'px, 0)';
-    var clipB = this._horizontal
-      ? 'rect(' + x + 'px, 999em, ' + this._bounds.height + 'px,0)'
-      : 'rect(0, 999em, ' + this._bounds.height + 'px,' + x + 'px)';
+
+    let clipA, clipB;
+
+    if (this._horizontal) {
+      // Horizontal orientation
+      clipA = `inset(0 ${this._bounds.width - x}px 0 0)`; // top, right, bottom, left
+      clipB = `inset(0 0 0 ${x}px)`;
+    } else {
+      // Vertical orientation
+      clipA = `inset(0 ${this._bounds.width - x}px 0 0)`;
+      clipB = `inset(0 0 0 ${x}px)`;
+    }
+
+    // var clipA = this._horizontal
+    //   ? 'rect(0, 999em, ' + x + 'px, 0)'
+    //   : 'rect(0, ' + x + 'px, ' + this._bounds.height + 'px, 0)';
+    // var clipB = this._horizontal
+    //   ? 'rect(' + x + 'px, 999em, ' + this._bounds.height + 'px,0)'
+    //   : 'rect(0, 999em, ' + this._bounds.height + 'px,' + x + 'px)';
     
-    this._mapA.getContainer().style.clip = clipA;
-    this._mapB.getContainer().style.clip = clipB;
+    // this._mapA.getContainer().style.clip = clipA;
+    // this._mapB.getContainer().style.clip = clipB;
+
+    this._mapA.getContainer().style.clipPath = clipA;
+    this._mapB.getContainer().style.clipPath = clipB;
+
+    console.log('modifyxd');
+
     this.currentPosition = x;
   },
 
@@ -196,14 +215,16 @@ Compare.prototype = {
     var aContainer = this._mapA.getContainer();
 
     if (!!aContainer) {
-      aContainer.style.clip = null;
+      // aContainer.style.clip = null;
+      aContainer.style.clipPath = null;
       aContainer.removeEventListener('mousemove', this._onMove);
     }
 
     var bContainer = this._mapB.getContainer();
 
     if (!!bContainer) {
-      bContainer.style.clip = null;
+      // bContainer.style.clip = null;
+      bContainer.style.clipPath = null;
       bContainer.removeEventListener('mousemove', this._onMove);
     }
 
