@@ -109,7 +109,18 @@ Compare.prototype = {
     this._mapA.getContainer().style.clipPath = clipA;
     this._mapB.getContainer().style.clipPath = clipB;
 
+    this.clipA = clipA;
+    this.clipB = clipB;
+
     this.currentPosition = x;
+  },
+
+  getClipA: function() {
+    return this.clipA;
+  },
+
+  getClipB: function() {
+    return this.clipB;
   },
 
   _onMove: function(e) {
